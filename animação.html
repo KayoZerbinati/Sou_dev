@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Quiz - Layout Inspirado no Kahoot</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="animation" id="nameAnimation">
+    Sou Dev <!-- Inicialmente exibe o texto "Sou Dev" -->
+  </div>
+
+  <script>
+    const nameAnimationElement = document.getElementById('nameAnimation');
+    const text = "💻🖱️";
+    let isTextVisible = true;
+
+    setInterval(() => {
+      if (isTextVisible) {
+        nameAnimationElement.textContent = text;
+      } else {
+        nameAnimationElement.textContent = "Sou Dev </>";
+      }
+      isTextVisible = !isTextVisible;
+    }, 3000); // Alterna entre texto e emoji a cada 1 segundo (1000ms)
+  </script>
+  <br>
+  <p>As questões serão seguidas do seguinte modo:</p>
+  <ol>
+      <li>você terá que incerir seu nome para começar</li>
+      <li>Será embaralhada as questões de forma a não ter repetição</li>
+      <li>as respostas também serão embralhadas</li>
+      <li>terá uma contagem de reestart</li>
+  </ol>
+  <h4>Espero que gostem 😁</h4>
+  <a href="quiz9.html"><button class="button">Iniciar</button></a>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Quiz - Matéria escolar (idéia)</title>
+</head>
+<link rel="stylesheet" href="style_quiz.css">
+<body>
+  <div class="container">
+    <h1>Quiz - Matéria escolar (idéia)</h1>
+
+    <div id="intro">
+      <h2>Bem-vindo ao Quiz!</h2>
+      <p>Calma, calma para que tanta pressa 👐
+      <br>
+      Antes de começar, por favor, digite seu nome por favor 😁:</p>
+      <input type="text" id="nameInput">
+      <button type="button" onclick="startQuiz()">Iniciar Quiz</button>
+    </div>
+
+    <div id="quiz" style="display: none;">
+      <div class="question">
+        <h2></h2>
+        <ul class="options"></ul>
+      </div>
+
+      <div class="submit-btn">
+        <button type="button" onclick="checkAnswer()">Enviar Resposta</button>
+      </div>
+    </div>
+    
+    <div class="reset-counter" id="resetCounter" style="display: none;">
+      <p>Quantidade de Resets: <span id="resetCount">0</span></p>
+    </div>
+    
+    <div class="result-message" id="resultMessage" style="display: none;">
+      <h2>Quiz Finalizado!</h2>
+      <p id="message"></p>
+    </div>
+    
+    <div class="animation">
+      Sou Dev </> <!-- Inicialmente exibe o texto "Sou Dev </>" -->
+    </div>
+  </div>
+
+  <script>
+    let resetCount = 0;
+    let currentQuestion = 0;
+    let playerName = "";
+    let shuffledQuestions = [];
+    
+    const questions = [
+      {
+        question: "Qual é a capital do Brasil?",
+        options: [
+          { text: "Brasília", correct: true },
+          { text: "Rio de Janeiro", correct: false },
+          { text: "São Paulo", correct: false }
+        ]
+      },
+      {
+        question: "Qual é a capital da Argentina?",
+        options: [
+          { text: "Buenos Aires", correct: true },
+          { text: "Santiago", correct: false },
+          { text: "Montevidéu", correct: false }
+        ]
+      },
+      {
+        question: "Qual é a capital da França?",
+        options: [
+          { text: "Paris", correct: true },
+          { text: "Roma", correct: false },
+          { text: "Londres", correct: false }
+        ]
+      },
+      {
+        question: "Qual é a capital do Japão?",
+        options: [
+          { text: "Tóquio", correct: true },
+          { text: "Pequim", correct: false },
+          { text: "Seul", correct: false }
+        ]
+      },
+      {
+        question: "Qual é a capital da Austrália?",
+        options: [
+          { text: "Canberra", correct: true },
+          { text: "Sydney", correct: false },
+          { text: "Melbourne", correct: false }
+        ]
+      },
+      {
+        question: "Qual é a capital da Rússia?",
+        options: [
+          { text: "Moscou", correct: true },
+          { text: "São Petersburgo", correct: false },
+          { text: "Kiev", correct: false }
+        ]
+      }
+      // Adicione mais perguntas aqui
+      // ...
+    ];
+    
+    function startQuiz() {
+      playerName = document.getElementById('nameInput').value.trim();
+      
+      if (playerName !== "") {
+        document.getElementById('intro').style.display = "none";
+        document.getElementById('quiz').style.display = "block";
+        shuffledQuestions = shuffleArray(questions);
+        showNextQuestion();
+      }
+    }
+
+    function checkAnswer() {
+      const selectedOption = document.querySelector('input[name="option"]:checked');
+
+      if (selectedOption) {
+        const isCorrect = selectedOption.value === "true";
+        
+        if (isCorrect) {
+          // Resposta correta
+          if (currentQuestion < shuffledQuestions.length - 1) {
+            // Avança para a próxima pergunta
+            currentQuestion++;
+            showNextQuestion();
+          } else {
+            // Fim do Quiz
+            showResult();
+          }
+        } else {
+          // Resposta incorreta
+          resetQuestions();
+        }
+      }
+    }
+
+    function resetQuestions() {
+      resetCount++;
+      currentQuestion = 0;
+      document.getElementById('resetCount').textContent = resetCount;
+      shuffledQuestions = shuffleArray(questions);
+      showNextQuestion();
+    }
+
+    function showNextQuestion() {
+      const questionElement = document.querySelector('.question h2');
+      const optionsElement = document.querySelector('.options');
+      const currentQuizQuestion = shuffledQuestions[currentQuestion];
+      
+      questionElement.textContent = currentQuizQuestion.question;
+      optionsElement.innerHTML = "";
+      
+      // Embaralhar as opções
+      const shuffledOptions = shuffleArray(currentQuizQuestion.options);
+      
+      // Criar elementos de opção para exibir as alternativas
+      shuffledOptions.forEach(option => {
+        const liElement = document.createElement('li');
+        const inputElement = document.createElement('input');
+        
+        inputElement.setAttribute('type', 'radio');
+        inputElement.setAttribute('name', 'option');
+        inputElement.setAttribute('value', option.correct.toString());
+        
+        liElement.appendChild(inputElement);
+        liElement.appendChild(document.createTextNode(option.text));
+        
+        optionsElement.appendChild(liElement);
+      });
+    }
+
+    function showResult() {
+      document.getElementById('quiz').style.display = "none";
+      document.getElementById('resetCounter').style.display = "block";
+      document.getElementById('resultMessage').style.display = "block";
+      
+      const messageElement = document.getElementById('message');
+      const incorrectAnswers = resetCount - 1;
+
+      if (incorrectAnswers < 3) {
+        messageElement.textContent = "Parabéns, " + playerName + "! Você é um gênio!";
+      } else if (incorrectAnswers < 6) {
+        messageElement.textContent = "Bom jogo, " + playerName + "! Você se saiu muito bem!";
+      } else {
+        messageElement.textContent = "Mais sorte da próxima vez, " + playerName + "! Você pode fazer melhor!";
+      }
+    }
+    
+    // Função para embaralhar um array
+    function shuffleArray(array) {
+      const newArray = array.slice(); // Cria uma cópia do array original
+      
+      for (let i = newArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+      }
+      
+      return newArray;
+    }
+    
+    const nameAnimationElement = document.querySelector('.animation');
+    const text = "💻🖱️";
+    let isTextVisible = true;
+
+    setInterval(() => {
+      if (isTextVisible) {
+        nameAnimationElement.textContent = text;
+      } else {
+        nameAnimationElement.textContent = "Sou Dev </>";
+      }
+      isTextVisible = !isTextVisible;
+    }, 3000); // Alterna entre texto e emoji a cada 1 segundo (5000ms)
+  </script>
+</body>
+</html>
